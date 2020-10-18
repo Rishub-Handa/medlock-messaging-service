@@ -1,13 +1,12 @@
 const express = require('express')
 const bodyParser = require('body-parser'); 
 const mongoose = require('mongoose'); 
-const axios = require('axios'); 
-const MessagingResponse = require('twilio').twiml.MessagingResponse;
-const CronJobManager = require('cron-job-manager'); 
+const { main } = require('./src/index'); 
+
+// TODO: REFACTOR ALL NESTED PROMISES 
 
 // DEBUG: 
-const { sendText, qText, dQ, isQEmpty } = require('./src/outbound');
-const { response } = require('express');
+const { qText } = require('./src/outbound');
 
 
 // Connect to MongoDB 
@@ -35,14 +34,11 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 // Handle incoming text 
-app.post('/api/inbound', function(req, res) {
-    console.log("incoming text. "); 
-    console.log(req.body); 
-
-
-
-    res.send("Received, thank you. "); 
-}); 
+app.post('/sms', function(req, res) {
+    const msg = req.body.Body
+    console.log(msg)
+    res.writeHead(200);
+});
 
 // Handle request to register patient 
 app.post('/api/registerPt', function(req, res) {
@@ -51,11 +47,14 @@ app.post('/api/registerPt', function(req, res) {
     res.send("Registered, thank you. "); 
 }); 
 
-app.post('/sms', function(req, res) {
-    const msg = req.body.Body
-    console.log(msg)
-    res.writeHead(200);
-});
+// Handle request to begin study for a patient 
+app.post('/api/beginStudy', function(req, res) {
+    console.log("starting study. "); 
+    console.log(req.body); 
+
+    res.send("Starting the study, thank you. "); 
+}); 
+
 
 
 // DEBUG: testing queue 
@@ -76,28 +75,9 @@ function test_q() {
 
 // test_q()
 
-// Start a cron job that checks the message queue every two seconds 
-const sendMsgManager = new CronJobManager() 
-sendMsgManager.add('sendMsgManager', '*/2 * * * * *', () => {
-    console.log("running send message cron job. "); 
-    
-    // If the message queue isn't empy 
-    if(!isQEmpty()) {
-        // Dequeue a message and send it 
-        const qMsg = dQ(); 
-        console.log(qMsg.phoneNum); 
-        console.log(qMsg.msg); 
-        sendText(qMsg.phoneNum, qMsg.msg); 
 
-    }
-
-}); 
-
-sendMsgManager.start('sendMsgManager'); 
-
- 
-
-
+// On startup 
+main(); 
 
 
 

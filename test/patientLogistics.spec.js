@@ -30,6 +30,13 @@ describe('Patient', function() {
             assert.strictEqual(followHour, 18); 
             assert.strictEqual(followMin, 0); 
 
+            const finalTime = pt.medicalData.textData.finalReminderTime; 
+            const finalHour = finalTime.hour; 
+            const finalMin = finalTime.minute; 
+
+            assert.strictEqual(finalHour, 20); 
+            assert.strictEqual(finalMin, 0); 
+
             assert.strictEqual(pt.medicalData.textData.emergencyContact, "Mom (phone number)"); 
             
         }); 

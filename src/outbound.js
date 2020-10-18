@@ -22,7 +22,9 @@ console.log(q.length());
 // Update the messages that the patient has received from the server 
 // Log that the patient has entered crisis mode 
 
-
+/*
+ * Add a text to the queue to send out later 
+ */ 
 function qText(phoneNum, msg) {
     q.enqueue({
         phoneNum: phoneNum, 
@@ -32,10 +34,16 @@ function qText(phoneNum, msg) {
     console.log(q.length())
 }
 
+/*
+ * Dequeue and return the top item from them queue 
+ */
 function dQ() {
     return q.dequeue(); 
 }
 
+/*
+ * Return if the queue is empty 
+ */
 function isQEmpty() {
     return q.isEmpty(); 
 }

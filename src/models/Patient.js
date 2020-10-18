@@ -78,6 +78,7 @@ const PatientSchema = new Schema({
             isControl: { type: Boolean }, 
             medReminderTime: [TimeSchema], 
             followUpTime: TimeSchema, // TEST: syntax 
+            finalReminderTime: TimeSchema, 
             crisisStartDate: { type: Date }, 
             sentMsgs: [{type: Number}], 
             isExpectingResponse: { type: Number }, // Set to -1 if false, otherwise set to text ID 

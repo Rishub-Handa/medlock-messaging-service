@@ -4,12 +4,13 @@
 
 const Patient = require('./models/Patient'); 
 const mongoose = require('mongoose'); 
+const { scheduleReminders, scheduleFollowUps, scheduleFinalFollowUps, resetMedsDaily } = require('./patientJobs'); 
 
 
 /* 
- * Register patient in database 
+ * Register patient in database; do this before starting the study 
 */ 
-async function registerPatient(name, phoneNum, reminderTimes, followUpTime, emergencyContact) {
+async function registerPatient(name, phoneNum, reminderTimes, followUpTime, finalReminderTime, emergencyContact) {
     console.log(`Creating patient: ${name}`); 
     let patientCreated = false; 
     const remTimes = reminderTimes.map(time => {
@@ -24,6 +25,11 @@ async function registerPatient(name, phoneNum, reminderTimes, followUpTime, emer
         minute: followUpTime.substring(3, 5) 
     }
 
+    const finalTime = {
+        hour: finalReminderTime.substring(0, 2), 
+        minute: finalReminderTime.substring(3, 5) 
+    }
+
     const patient = new Patient({
         _id: mongoose.Types.ObjectId(),
         personalData: {
@@ -34,11 +40,13 @@ async function registerPatient(name, phoneNum, reminderTimes, followUpTime, emer
             textData: {
                 medReminderTime: remTimes, 
                 followUpTime: folTime, 
+                finalReminderTime: finalTime, 
                 inPilot: true, 
                 tookMedsToday: false, 
                 riskScore: 0, 
                 emergencyContact: emergencyContact, 
-                isExpectingResponse: -2 
+                isExpectingResponse: -2,  // -2 because expecting an acknowledgement response on first text, which doesn't have msgID 
+                crisisStartDate: null 
             }
             
         },
@@ -55,16 +63,39 @@ async function registerPatient(name, phoneNum, reminderTimes, followUpTime, emer
 /*
  * Schedule daily texts 
 */
-function scheduleDailyTexts(phoneNum) {
+async function schedulePtJobs(phoneNum) {
+    const pt = await Patient.findOne({ 'personalData.phone': phoneNum }) 
+        .catch(err => console.log(err)); 
+    
+    // Schedule daily reminders to take medication 
+    const remTime = pt.medicalData.textData.medReminderTime[0]; 
+    const remHour = remTime.hour; const remMin = remTime.minute; 
+    scheduleReminders(phoneNum, remHour, remMin); 
 
+    // Schedule second daily follow on reminder to take medication if haven't 
+    const followTime = pt.medicalData.textData.followUpTime; 
+    const followHour = followTime.hour; const followMin = followTime.minute; 
+    scheduleFollowUps(phoneNum, followHour, followMin); 
+
+    const finalTime = pt.medicalData.textData.finalReminderTime; 
+    const finalHour = finalTime.hour; const finalMin = finalTime.minute; 
+    scheduleFinalFollowUps(phoneNum, finalHour, finalMin); 
+
+    resetMedsDaily(phoneNum); 
 
 }
 
 /*
- * Begin study for a patient; register the patient and schedule daily texts 
+ * Begin study for a patient; schedule daily texts and onboarding logistics
+ * This is done after the patient has been registered 
 */
-function beginStudy(name, phoneNum, reminderTimes, followUpTime, emergencyContact) {
+function beginStudy(phoneNum) {
     
+    // Send introductory messages 
+
+
+    // Schedule all jobs for patients 
+    schedulePtJobs(phoneNum); 
 
 }
 
@@ -73,4 +104,4 @@ function beginStudy(name, phoneNum, reminderTimes, followUpTime, emergencyContac
 
 
 
-module.exports = { registerPatient }; 
+module.exports = { registerPatient, beginStudy }; 
