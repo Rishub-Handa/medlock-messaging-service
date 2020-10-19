@@ -1,0 +1,217 @@
+[
+	{
+		"id": 0, 
+	    "text": "A big reason why people miss clinic visits is because it's very hard to get there. Do you have reliable transportation to make appointments? (Reply: Yes or No)", 
+		"riskLevel": 1, 
+		"interactive": "YN", 
+		"responses": ["That is AWESOME! Maybe consider setting up one or two backup options too. Having a friend or family member \"on-call\" will give the needed stability to guard against relapse.", "No worries. Maybe consider setting up one or two backup options too. Having a friend or family member \"on-call\" will give the needed stability to guard against relapse."] 
+	}, 
+	{
+		"id": 1, 
+		"text": "DID YOU KNOW: No medication is more effective at improving moods than exercise? Exercise helps lower cravings by releasing chemicals in the brain that makes us happy and relaxed. Choose one activity (examples: walking, yoga, soccer, etc.) today to release this calm energy from within.", 
+		"riskLevel": 1, 
+		"interactive": false
+	}, 
+	{
+		"id": 2, 
+		"text": "Whether people frequently help others (volunteering or just helping a friend) is the best sign of stable recovery after 10 years. It can even be as simple as helping someone move/unpack. Who's someone you've been meaning to help?", 
+		"riskLevel": 1, 
+		"interactive": "PERSON", 
+		"responses": ["Glad to hear you are uplifting the lives of others!! :) Continue to pay it forward knowing that \"grateful\" is the legacy you are leaving in the lives of those you help. "] 
+	}, 
+	{
+		"id": 3, 
+		"text": "Life is about realizing the passions and interests that cause you to thrive. What was the last thing you were excited to learn about? It may have been a skill (ex: gardening, detailing cars, etc.) or a topic (ex: animals, sports, etc.)?", 
+		"riskLevel": 1, 
+		"interactive": "TOPIC", 
+		"responses": ["Interesting indeed! With this known, don't hesitate to try TOPIC the next time you need a distraction from your cravings. Trust me, people get them ALL get them!"], 
+		"hasFollowUp": true, 
+		"followUpText": "Hey, have you learned anything new about TOPIC?", 
+		"followUpResponses": ["That's super cool! :) It's amazing how much more the world has to offer when we make learning a priority.", "I get it! Everyone gets busy. Next time you have some free time check it out. You may be surprised what you find! ;)"] 
+	}, 
+	{
+		"id": 4, 
+		"text": "Self-care means taking some time out of your day just for YOU. You deserve time to enjoy a hobby, relax in nature, or get a massage. Simply put if you’re not taking care of yourself, it becomes hardeer to cope with cravings and triggers. TREAT YO' SELF!!", 
+		"riskLevel": 1, 
+		"interactive": false
+	}, 
+	{
+		"id": 5, 
+		"text": "Hobbies are an amazing way to relax and stay ahead of your triggers. Stress is a major trigger for relapse, and hobbies help keep stress levels down by activating brain chemistry that causes pleasure. What is one interest/passion you have that can become a regular hobby? (Reply with a hobby)", 
+		"riskLevel": 1, 
+		"interactive": "HOBBY", 
+		"responses": ["PERFECT! See, you're getting it! Now, next time you aren’t feeling great, try HOBBY."], 
+		"hasFollowUp": true, 
+		"followUpText": "Hey, a little while back you mentioned hobbies you wanted to try. Just wondering...Have you tried out HOBBY yet?", 
+		"followUpResponses": ["NICE! I hope it helped! Even if it didn't, you are well on your way to finding the balance you deserve.", "You're missing quality time! If you can, try it out for only 15 minutes TODAY!"] 
+	},
+	{
+		"id": 6, 
+		"text": "DID YOU KNOW: Music can be therapy! It has been found to decrease cravings and lower stress. In fact classic bands such as Queen, Pink Floyd and Bob Marley have been found to be among the most effective at managing cravings and physical symptoms. Think of a song you LOVE, play it and enjoy the relief!", 
+		"riskLevel": 2, 
+		"interactive": false
+	}, 
+	{
+		"id": 7, 
+		"text": "Breathing exercises are scientifically proven to help you overcome stress, anxiety, and cravings. The next time you're craving, do what works! 1) Get in a comfortable position. 2) Keep your eyes opened or closed. 3) Inhale deeply for 4 seconds, and then exhale for 4 seconds. 4) Repeat 8 times.", 
+		"riskLevel": 2, 
+		"interactive": false
+	}, 
+	{
+		"id": 8, 
+		"text": "Meditation naturally relaxes you, lowers blood pressure, and strengthens your immune system, improves heart rate, breathing, and brain waves. Good stuff!! Interested in receiving a link with more information on meditative exercises? (Reply: Yes or No)", 
+		"riskLevel": 2, 
+		"interactive": "YN", 
+		"responses": ["Great to hear! Check it out here: https://www.recovery.org/treatment-therapy/meditation/", "No worries :)There are plenty of other coping strategies for the taking like support from a friend, exercise, prayer and reading a favorite book."] 
+	},
+	{
+		"id": 9, 
+		"text": "If you choose to practice, religion and spirituality can offer one of the greatest sources of strength for those in recovery. Many people in recovery say it improves their mental health, increases optimism about life, and makes them more resilient. If you wish, try seeking out faith-based programs and/or general spiritual guidance to join you in the recovery process.", 
+		"riskLevel": 2, 
+		"interactive": false
+	},
+	{
+		"id": 10, 
+		"text": "Developing supportive relationships will prove to be a blessing when times get tough. Who is that one friend that you'd like to start talking with more? ", 
+		"riskLevel": 2, 
+		"interactive": "PERSON", 
+		"responses": ["Cool! Consider sending them a text to find out when they're available to grab food or hang out."] 
+	}, 
+	{
+		"id": 11, 
+		"text": "We noticed your cravings have increased. Have you tried talking to NAME? (Reply: Yes or No)", 
+		"riskLevel": 3, 
+		"interactive": "YN", 
+		"responses": ["Great job reaching out! I hope the conversation helped but if it wasn't what you were hoping, don't be discouraged because developing relationships is a process. Keep at it!", "Fair enough. If your cravings aren't better at this time tomorrow, you may want to send a text for a change of scenery."] 
+	}, 
+	{
+		"id": 12, 
+		"text": "Tolerance can decrease VERY quickly if you take a break from using. Whether on purpose (treatment) or unexpected (jail/hospitalization), be very careful if returning to use because your body may not be able to handle the same amount of substance and put you at risk for overdose.", 
+		"riskLevel": 3, 
+		"interactive": false
+	}, 
+	{
+		"id": 13, 
+		"text": "Do you know if you have any liver problems? Your body may have more difficulty breaking down opioids and benzos. Avoid medications such as Vicodin, Percocet, Valium and Xanax if you can!", 
+		"riskLevel": 3, 
+		"interactive": false
+	}, 
+
+	{
+		"id": 14, 
+		"text": "DID YOU KNOW: Opioid use (including buprenorphine or methadone) often leads to developing a sweet tooth? Try fresh or dried fruits to curb the cravings during treatment!", 
+		"riskLevel": 1, 
+		"interactive": false
+	}, 
+	{
+		"id": 15, 
+		"text": "DID YOU KNOW: Using a substance or drink in a new environment will DECREASE your tolerance? If using, do so in comfort zones which you are familiar with to minimize risk and avoid overdose!", 
+		"riskLevel": 3, 
+		"interactive": false
+	}, 
+	{
+		"id": 16, 
+		"text": "DID YOU KNOW: In recovery, it’s really common for your sleep schedule to get messed up. Opioids and Benzos cause you to become more sleepy, but in the long term cause sleep issues. Bad sleep leads to other health problems. Try to sleep at the same time every day, avoid caffeine and alcohol late at night, and TALK TO YOUR DOCTOR if you find sleeping difficult.", 
+		"riskLevel": 2, 
+		"interactive": false
+	}, 
+	{
+		"id": 17, 
+		"text": "DID YOU KNOW: An overdose on Fentanyl can look different than on other opioids? Fentanyl use can lead to very stiff muscles or poor control of movement while other opioids usually lead to limpness. Know the signs and don't be afraid to GET HELP!", 
+		"riskLevel": 3, 
+		"interactive": false
+	}, 
+	{
+		"id": 18, 
+		"text": "DID YOU KNOW: Signs of an opioid overdose include small pupils, slow breathing, and a sleepy appearance. Know the signs and GET HELP quick!", 
+		"riskLevel": 2, 
+		"interactive": false
+	},
+	{
+		"id": 19, 
+		"text": "DID YOU KNOW: States that have a Good Samaritan Law prevent legal action or the police from arresting anyone who calls 911 to prevent an overdose. Google it!", 
+		"riskLevel": 2, 
+		"interactive": false
+	},
+	{
+		"id": 20, 
+		"text": "DID YOU KNOW: States that have a Good Samaritan Law prevent legal action or the police from arresting anyone who calls 911 to prevent an overdose. Google it!", 
+		"riskLevel": 2, 
+		"interactive": false
+	},
+	{
+		"id": 21, 
+		"text": "CAUTION: If someone you know begins to use again after taking a break, be careful! Ask them to use a \"tester shot\", smaller amount, or different method (snort rather than shoot) to prevent a potential overdose.", 
+		"riskLevel": 3, 
+		"interactive": false
+	},
+	{
+		"id": 22, 
+		"text": "Over 2 million Americans called the suicide hotline last year! Do you have a crisis plan that includes someone YOU can call when life becomes overwhelming? (Reply: Yes or No)", 
+		"riskLevel": 1, 
+		"interactive": "YN", 
+		"responses": ["Wow, that is great news! You can also call the Suicide Prevention Lifeline anytime you feel you have no where else to turn. You and your life have meaning, if that is EVER in doubt please call 1-800-273-8255.", "If you feel that you have no where else to turn you can always call the National Suicide Prevention Lifeline. You and your life have meaning, if that is EVER in doubt please call 1-800-273-8255."] 
+	}, 
+	{
+		"id": 23, 
+		"text": "DID YOU KNOW: One of the fastest ways to improve in recovery is to volunteer or pursue work? We know this can be incredibly difficult but if you are able, we encourage you to try and join any local group, even for a hobby like sports or helping shelter animals!", 
+		"riskLevel": 1, 
+		"interactive": false
+	},
+	{
+		"id": 24, 
+		"text": "Over half a million men and women called a domestic violence hotline last year to get help and resources on changing their situation. Do you know the number to provide help to a friend in such a situation? (Reply: Yes or No)", 
+		"riskLevel": 1, 
+		"interactive": "YN", 
+		"responses": ["Awesome! Never hesitate to call 1-800-799-7233", "Thankfully, I have it handy! The number is 1-800-799-7233"] 
+	}, 
+	{
+		"id": 25, 
+		"text": "Do you know how to recognize the signs of an ALCOHOL overdose? Just remember PUBS: Puking (while passed out), Unresponsive (to pinching), Breathing (slow or shallow) and Skin (blue, cold or clammy).", 
+		"riskLevel": 1, 
+		"interactive": false
+	},
+	{
+		"id": 26, 
+		"text": "Do you have a sober friend who you would trust when things in your life seemed at their worst?", 
+		"riskLevel": 1, 
+		"interactive": "YN", 
+		"responses": ["Fantastic! Those friends are rare treasures. Be sure to save their name and number in your phone and/or a safe place like in your wallet, purse, or pocket!", "Consider keeping a family member or a medical care provider’s name and number in your phone and/or a safe place like in your wallet, purse, or pocket"] 
+	}, 
+	{
+		"id": 27, 
+		"text": "Roughly 1.5 million Americans use MAT. This is a legitimate form of recovery, but there are many options including AA, NA, Celebrate Recovery and SMART Recovery. Many of these offer online meetings. Find what works for you!", 
+		"riskLevel": 1, 
+		"interactive": false
+	}, 
+	{
+		"id": 28, 
+		"text": "Practicing gratitude actually rewires our brains to think in a positive mindset. Even on a bad day, there is ALWAYS something to be thankful for, like a good cup of coffee or a caring friend. Consider one thing you are grateful for TODAY.", 
+		"riskLevel": 1, 
+		"interactive": false
+	}, 
+	{
+		"id": 29, 
+		"text": "A great way to stay on track to recovery is to avoid environments with drugs and alcohol. Is there a risky social environment you want to start avoiding. Be honest! (reply with a location)", 
+		"riskLevel": 1, 
+		"interactive": "LOCATION", 
+		"responses": ["That was a tough question, thank you for answering!"], 
+		"hasFollowUp": true, 
+		"followUpText": "Hey, a little while back you mentioned areas that you might want to avoid. Just wondering...have you been able to avoid LOCATION?", 
+		"followUpResponses": ["Excellent! It is still worth potentially spending some time with friends you normally don't meet and also getting help from your doctor to avoid certain places in the future", "We completely understand how difficult it can be to avoid friends, family, or locations. Perhaps spend some time with friends you normally don't meet and talk to your doctor about how to avoid certain places."] 
+	},  
+	{
+		"id": 30, 
+		"text": "If you know your triggers, you will be more effective at avoiding risky situations. What is one new trigger you have learned about recently? (reply with a trigger)", 
+		"riskLevel": 1, 
+		"interactive": "TRIGGER", 
+		"responses": ["That's great insight! In the future, rely on this new found wisdom to better manage your cravings :)"] 
+	}, 
+	{
+		"id": 31, 
+		"text": "Setting personal goals will help create direction in your life. Goals should be clear and simple and focus on your recovery, career, family, and passions. What is one goal you'd like to achieve in the next 6 months? (reply with a goal)", 
+		"riskLevel": 1, 
+		"interactive": "GOAL", 
+		"responses": ["That will definitely keep you on track! Remember it's a marathon NOT a sprint so pace yourself."] 
+	} 
+]

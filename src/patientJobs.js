@@ -3,9 +3,12 @@ const CronJobManager = require('cron-job-manager');
 const { qText } = require('./outbound');
 const { hasTakenMeds } = require('./patientInfo'); 
 const { inCrisis, resetTookMedsToday } = require('./patientActions') 
+const { parseNAME } = require('./textResponse'); 
+const textBank = require('../msgBank/textBank.json'); 
+const specialTexts = require('../msgBank/specialTexts.json'); 
 
-const patientJobs = new CronJobManager()
-console.log("new manager created")
+const patientJobs = new CronJobManager(); 
+console.log("new manager created"); 
 
 /*
  * Get the patientJobs manager 
@@ -24,13 +27,16 @@ function doesJobExist(key) {
 
 /*
  * Send daily reminders to take medication. 
- * IMPLEMENT: choose the correct text to send 
 */
 function scheduleReminders(phoneNum, hour, min) {
     console.log("scheduling daily reminders"); 
 
     patientJobs.add(`${phoneNum}-medRemJob`, `0 ${min} ${hour} */1 * *`, () => {
-        qText(phoneNum, "take ya meds bro"); 
+        const remMsgs = specialTexts.reminders; 
+        const msgIdx = Math.floor(Math.random() * remMsgs.length); 
+        const msg = remMsgs[msgIdx]; 
+
+        qText(phoneNum, msg); 
     }); 
     patientJobs.start(`${phoneNum}-medRemJob`);
 
@@ -40,7 +46,6 @@ function scheduleReminders(phoneNum, hour, min) {
 
 /*
  * Check if need to follow up with patient to ask for medication time. 
- * IMPLEMENT: choose the correct text to send 
 */ 
 async function scheduleFollowUps(phoneNum, hour, min) {
     console.log("scheduling daily follow up text"); 
@@ -51,7 +56,11 @@ async function scheduleFollowUps(phoneNum, hour, min) {
 
         if(!tookMeds) {
             // Send follow up message 
-            qText(phoneNum, "take ya meds bro follow up"); 
+            const folUpMsgs = specialTexts.medFollowUp; 
+            const msgIdx = Math.floor(Math.random() * folUpMsgs.length); 
+            const msg = folUpMsgs[msgIdx]; 
+
+            qText(phoneNum, msg); 
         }
     }); 
     patientJobs.start(`${phoneNum}-folRemJob`);
@@ -60,7 +69,6 @@ async function scheduleFollowUps(phoneNum, hour, min) {
 
 /*
  * Check if need to follow up a second time with patient to ask for medication time; determine if patient is in crisis mode. 
- * IMPLEMENT: send correct crisis text and opt out message 
 */ 
 async function scheduleFinalFollowUps(phoneNum, hour, min) {
     console.log("scheduling final follow up text"); 
@@ -71,13 +79,21 @@ async function scheduleFinalFollowUps(phoneNum, hour, min) {
 
         // If patient didn't take medications today 
         if(!tookMeds) {
+            const daysInCrisis = await inCrisis(); 
             // Send crisis message 
-            qText(phoneNum, "take ya meds bro final follow up"); 
+            let crisisMsg = ""; 
+            if(daysInCrisis % 3 == 1) crisisMsg = specialTexts.crisis1[0]; 
+            else if(daysInCrisis % 3 == 2) crisisMsg = specialTexts.crisis2[0]; 
+            else if(daysInCrisis % 3 == 0) crisisMsg = specialTexts.crisis3[0]; 
+
+            // Parse for emergency contact name 
+            crisisMsg = await parseNAME(phoneNum, crisisMsg); 
+
+            qText(phoneNum, crisisMsg); 
 
             // Check to send opt out message 
-            const daysInCrisis = await inCrisis(); 
             if(daysInCrisis % 3 == 0) {
-                const optOutMsg = "Opt out. " 
+                const optOutMsg = specialTexts.optOutMsg[0]; 
                 qText(phoneNum, optOutMsg); 
             }
         }

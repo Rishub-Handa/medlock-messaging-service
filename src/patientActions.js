@@ -91,7 +91,6 @@ async function inCrisis(phoneNum) {
         daysInCrisis = 1; 
         // Set crisisStartDate to today at midnight 
 
-        // DEBUG: 
         let newStartDate = new Date(); 
         newStartDate.setHours(0, 0, 0, 0); 
         pt.medicalData.textData.crisisStartDate = newStartDate; 

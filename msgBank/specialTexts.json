@@ -1,0 +1,44 @@
+{
+    "crisis1": [
+        "Hi, it looks like things are challenging right now. If you have the time, please reach out to your emergency contact NAME. People care about you. " 
+    ], 
+    "crisis2": [
+        "It looks like you have not been feeling great lately. Please reach out to support networks like your friends and family, the suicide hotline at '800-273-8255,' or the crisis text line by texting 'HOME' to 741741. "
+    ], 
+    "crisis3": [
+        "Are you doing okay? It might help to reach out to your emergency contact NAME. " 
+    ], 
+    "medFollowUp": [
+        "Hey there. As a reminder, you can text \"med\" to us to let us know that you took your medication today!", 
+        "Hi! It looks like you may have missed your medication dose today. It will help to stave off any withdrawal symptoms so remember to take it and text us \"med]\" when you do!", 
+        "We hope you are feeling OK that your medication is working. Text us \"med\" when you take your medication and if your medication isn't working, reach out to your doctor!", 
+        "Hey it seems like you had a busy day today. As a reminder, please text \"med\" and how you feel from \"1\" (great) to \"5\" (awful) for today!", 
+        "We always want to make sure that you are doing well! Please remember to text us \"med\" and how you feel from \"1\" (great) to \"5\" (awful) for today. ", 
+        "Recovery is a difficult path and you are doing an amazing job! Remember that to receive your bonus funds you should text us \"med\" and how you feel from \"1\" (great) to \"5\" (awful) so we can help improve your care!" 
+    ], 
+    "symptomFollowUp": [
+        "We are glad your medication is working for you! Would you be able to also let us know how you feel from \"1\" (great) to \"5\" (awful) today? ", 
+        "Thank you for sending us your medication message today! Can you be able to also let us know how you feel from \"1\" (great) to \"5\" (awful) today? ", 
+        "We saw that you had not sent us your symptom data today, do you mind texting us how you feel from \"1\" (great) to \"5\" (awful) today?" 
+    ], 
+    "introductoryMessage": [
+        "Welcome to the platform! You will receive messages with information about healthy living, your treatment, and strategies to maximize your recovery. Some messages will just provide information. Others will ask for a short response and you can respond with a word, or a \"Yes\" or \"No\". ", 
+        "As part of this study, you will be asked every day to text us the word \"med\" when you take your medication and a number and a number (1-5) which will tell us how are your cravings. 1 = no cravings and withdrawal. 5 = high cravings and/or bad withdrawal. The text will look like: \"med 2\". ", 
+        "If you do this for two weeks, you will receive $25. Do you understand all of this? (Reply: Yes or No)" 
+    ], 
+    "introductoryMsgFollowUp": [
+        "Great! If you already took your medication today, you can text \"med (1-5)\" now. Otherwise, wait until you take your medications. ", 
+        "No problem. Please text or call (732) 666-7043 with any questions you may have. We're happy to help. "
+    ], 
+    "reminders": [
+        "Hi, quick reminder to let us know how you felt today after taking your medication! ", 
+        "Be sure to stay on track with your medication and let your provider know if you encounter difficulties", 
+        "This is your medication reminder for today!", 
+        "Remember to take your medication today and let us know how you feel!", 
+        "We hope today goes well for you! This is your daily medication reminder. ", 
+        "We wanted to send you a reminder for your medication for today. Have a great day! " 
+    ], 
+    "optOutMsg": [
+        "If, at any point, you feel that you would not like to participate in this study anymore, please feel free to text 'OPT OUT.' You will not receive the $25 if you opt out. "
+    ]
+} 

@@ -2,15 +2,15 @@
 // Parse for medical information 
 // Parse for personal information 
 
-const { getEmergencyContact } = require('./patientInfo'); 
 const { handleDispense, handleCravings } = require('./patientActions'); 
+const { isExpectingResponse } = require('./patientInfo'); 
 const { saveTextFromPatient } = require('./outbound'); 
-const { sendMedResponse } = require('./textResponse'); 
+const { handleMedResponse, handleExpectedResponse } = require('./textResponse'); 
+const { qText } = require('./outbound'); 
 
 
 /*
  * Main function to handle incoming message 
- * TEST 
  */ 
 async function inboundMsgHandler(phoneNum, msg) {
     // Save text from patient 
@@ -23,8 +23,8 @@ async function inboundMsgHandler(phoneNum, msg) {
         containsMedInfo = true; 
         // Store medication data 
         await handleDispense(phoneNum); 
-        // IMPLEMENT: Send response 
-        // await sendMedResponse(phoneNum); 
+        // Send response 
+        await handleMedResponse(phoneNum); 
     }
 
 
@@ -38,12 +38,17 @@ async function inboundMsgHandler(phoneNum, msg) {
         await handleCravings(phoneNum, score); 
     }
 
-
-    
+    if(containsMedInfo) return; 
 
     // If expecting a response, handle the response 
+    let msgID = 0; 
+    if((msgID = await isExpectingResponse(phoneNum)) != -1) { 
+        await handleExpectedResponse(phoneNum, msg, msgID); 
+        return; 
+    } 
 
- 
+    // Otherwise 
+    qText(phoneNum, "Sorry, I didn\'t get that. Send \'med\' when you take your medication and text a number from 1-5 to track your cravings. "); 
 
 }
 
@@ -77,19 +82,6 @@ function textHasCravingsData(msg) {
 }
 
 
-/*
- * Check if text has "NAME" to replace with emergency contact information 
- */ 
-async function parseNAME(phoneNum, msg) { 
 
-    let newMsg = msg; 
 
-    if(msg.indexOf("NAME") != -1) { 
-        const emergencyContact = await getEmergencyContact(phoneNum); 
-        newMsg = msg.replace("NAME", emergencyContact); 
-    }
-
-    return newMsg; 
-}
-
-module.exports = { inboundMsgHandler, textHasMedData, textHasCravingsData, parseNAME }
+module.exports = { inboundMsgHandler, textHasMedData, textHasCravingsData } 

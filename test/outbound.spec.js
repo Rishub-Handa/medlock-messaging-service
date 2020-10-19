@@ -1,6 +1,7 @@
 const { getAllTextsByPhone, 
         saveTextFromPatient, 
         saveTextFromServer } = require('../src/outbound'); 
+const { registerPatient } = require('../src/patientLogistics'); 
 const assert = require('assert');
 const mongoose = require('mongoose')
 
@@ -8,6 +9,24 @@ describe('outbound', function() {
     
 
     before("save text from patient and server", async function() {
+        // Delete current patient 
+        await Patient.deleteOne({ 'personalData.phone': "+17326667043" })
+            .catch(err => console.log(err));
+        console.log("deleting patients. "); 
+
+        // Create new patient 
+        const db = 'mongodb+srv://chase:chase123@patient-data-4fcpy.mongodb.net/patient-datadb?retryWrites=true&w=majority'
+
+        await mongoose.connect(db, {
+            useNewUrlParser: true, 
+            useCreateIndex: true 
+            })
+            .then(() => console.log("connected to mongoDB")); 
+
+        // First create patient; patient should be created successfully 
+        await registerPatient("Rishub Handa", "+17326667043", "10:00", "18:00", "20:00", "Mom (phone number)"); 
+        console.log("finished registering test patient.")
+
         console.log("saving texts from patient and server"); 
         await saveTextFromPatient("+17326667043", "my first message"); 
         await saveTextFromServer("+17326667043", "message from server"); 

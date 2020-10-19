@@ -24,7 +24,7 @@ function scheduleMsgSender() {
 
     const sendMsgManager = new CronJobManager() 
     sendMsgManager.add('sendMsgManager', '*/2 * * * * *', () => {
-        console.log("running send message cron job. "); 
+        // console.log("running send message cron job. "); 
         
         // If the message queue isn't empy 
         if(!isQEmpty()) {

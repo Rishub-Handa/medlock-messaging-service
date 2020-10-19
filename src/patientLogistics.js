@@ -4,7 +4,9 @@
 
 const Patient = require('./models/Patient'); 
 const mongoose = require('mongoose'); 
-const { scheduleReminders, scheduleFollowUps, scheduleFinalFollowUps, resetMedsDaily } = require('./patientJobs'); 
+const { scheduleReminders, scheduleFollowUps, scheduleFinalFollowUps, resetDaily } = require('./patientJobs'); 
+const { qText } = require('./outbound');
+const specialTexts = require('../msgBank/specialTexts.json'); 
 
 
 /* 
@@ -13,12 +15,10 @@ const { scheduleReminders, scheduleFollowUps, scheduleFinalFollowUps, resetMedsD
 async function registerPatient(name, phoneNum, reminderTimes, followUpTime, finalReminderTime, emergencyContact) {
     console.log(`Creating patient: ${name}`); 
     let patientCreated = false; 
-    const remTimes = reminderTimes.map(time => {
-        return {
-            hour: time.substring(0, 2), 
-            minute: time.substring(3, 5) 
-        }
-    })
+    const remTimes = {
+        hour: reminderTimes.substring(0, 2), 
+        minute: reminderTimes.substring(3, 5) 
+    }
 
     const folTime = {
         hour: followUpTime.substring(0, 2), 
@@ -81,7 +81,7 @@ async function schedulePtJobs(phoneNum) {
     const finalHour = finalTime.hour; const finalMin = finalTime.minute; 
     scheduleFinalFollowUps(phoneNum, finalHour, finalMin); 
 
-    resetMedsDaily(phoneNum); 
+    resetDaily(phoneNum); 
 
 }
 
@@ -92,7 +92,9 @@ async function schedulePtJobs(phoneNum) {
 function beginStudy(phoneNum) {
     
     // Send introductory messages 
-
+    qText(phoneNum, specialTexts.introductoryMessage[0]); 
+    qText(phoneNum, specialTexts.introductoryMessage[1]); 
+    qText(phoneNum, specialTexts.introductoryMessage[2]); 
 
     // Schedule all jobs for patients 
     schedulePtJobs(phoneNum); 

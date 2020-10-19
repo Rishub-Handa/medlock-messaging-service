@@ -1,19 +1,40 @@
-const { AssetVersionContext } = require('twilio/lib/rest/serverless/v1/service/asset/assetVersion');
 const { inboundMsgHandler, 
         textHasMedData, 
-        textHasCravingsData, 
-        parseNAME } = require('../src/inbound'); 
+        textHasCravingsData } = require('../src/inbound'); 
 const { registerPatient } = require('../src/patientLogistics'); 
+const { updateExpectingResponse } = require('../src/patientActions'); 
+const { lastQElem } = require('../src/outbound'); 
 
 const mongoose = require('mongoose')
 const assert = require('assert'); 
+const textBank = require('../msgBank/textBank.json'); 
+const specialTexts = require('../msgBank/specialTexts.json'); 
 
 
 describe('inbound', function() {
 
     before("receive a few messages with medication, cravings, and other data", async function(){
 
-        const phoneNum = "+17326667043"
+        const phoneNum = "+17326667043"; 
+
+        // Delete current patient 
+        await Patient.deleteOne({ 'personalData.phone': "+17326667043" })
+            .catch(err => console.log(err));
+        console.log("deleting patients. "); 
+
+        // Create new patient 
+        const db = 'mongodb+srv://chase:chase123@patient-data-4fcpy.mongodb.net/patient-datadb?retryWrites=true&w=majority'
+
+        await mongoose.connect(db, {
+            useNewUrlParser: true, 
+            useCreateIndex: true 
+            })
+            .then(() => console.log("connected to mongoDB")); 
+
+        // First create patient; patient should be created successfully 
+        await registerPatient("Rishub Handa", "+17326667043", "10:00", "18:00", "20:00", "Mom (phone number)"); 
+        console.log("finished registering test patient.")
+
         await inboundMsgHandler(phoneNum, "MED 5"); 
         await inboundMsgHandler(phoneNum, "My favorite hobby is snowboarding. "); 
         await inboundMsgHandler(phoneNum, "I took my medications today"); 
@@ -62,7 +83,37 @@ describe('inbound', function() {
 
         }); 
 
+        it("should handle texts when expecting a response", async function() {
+            const phoneNum = "+17326667043"; 
 
+            // Incoming response to intro msg 
+            await updateExpectingResponse(phoneNum, -2);
+            await inboundMsgHandler(phoneNum, "yes"); 
+            assert.strictEqual(lastQElem().msg, specialTexts.introductoryMsgFollowUp[0]); 
+
+            // Incoming response to follow up msg 
+            await updateExpectingResponse(phoneNum, 3);
+            await inboundMsgHandler(phoneNum, "some topic"); 
+            assert.strictEqual(lastQElem().msg, textBank[3].responses[0].replace("TOPIC", "some topic")); 
+
+            await updateExpectingResponse(phoneNum, 3);
+            await inboundMsgHandler(phoneNum, "n"); 
+            assert.strictEqual(lastQElem().msg, textBank[3].followUpResponses[1]); 
+
+            // Incoming response to no follow up msg 
+            await updateExpectingResponse(phoneNum, 11);
+            await inboundMsgHandler(phoneNum, "n"); 
+            assert.strictEqual(lastQElem().msg, textBank[11].responses[1]); 
+
+        }); 
+
+        it("should handle unanticipated response from patients", async function() {
+            const phoneNum = "+17326667043"; 
+            await updateExpectingResponse(phoneNum, -1); 
+            await inboundMsgHandler(phoneNum, "some random text"); 
+            assert.strictEqual(lastQElem().msg, "Sorry, I didn\'t get that. Send \'med\' when you take your medication and text a number from 1-5 to track your cravings. ");         
+
+        }); 
 
 
     })
@@ -122,24 +173,6 @@ describe('inbound', function() {
         })
 
     }); 
-    
-    describe('#parseNAME', function() {
-        it("should replace the text NAME with the emergency contact of the patient if the text has NAME", async function() {
-            const msg1 = "Your cravings have been high lately. Try reaching out to NAME to get some help."; 
-            const msg2 = "Have you tried talking to NAME?"; 
-            const msg3 = "Try out HOBBY; you'll feel a lot better. "; 
-
-            const res1 = await parseNAME("+17326667043", msg1)
-            const res2 = await parseNAME("+17326667043", msg2)
-            const res3 = await parseNAME("+17326667043", msg3)
-
-            assert.strictEqual(res1, "Your cravings have been high lately. Try reaching out to Mom (phone number) to get some help."); 
-            assert.strictEqual(res2, "Have you tried talking to Mom (phone number)?"); 
-            assert.strictEqual(res3, "Try out HOBBY; you'll feel a lot better. "); 
-        }); 
-
-    }); 
-
 
     after("reset the patient ", async function() {
         // Delete current patient 
@@ -157,7 +190,7 @@ describe('inbound', function() {
             .then(() => console.log("connected to mongoDB")); 
 
         // First create patient; patient should be created successfully 
-        await registerPatient("Rishub Handa", "+17326667043", ["10:00"], "18:00", "20:00", "Mom (phone number)"); 
+        await registerPatient("Rishub Handa", "+17326667043", "10:00", "18:00", "20:00", "Mom (phone number)"); 
         console.log("finished registering test patient.")
 
     }); 

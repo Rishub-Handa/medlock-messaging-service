@@ -1,7 +1,6 @@
 const { updateSentMsgs, updateExpectingResponse, inCrisis } = require('../src/patientActions'); 
 const { getSentMsgs, isExpectingResponse, getRiskScore } = require('../src/patientInfo'); 
 const assert = require('assert'); 
-const Patient = require('../src/models/Patient'); 
 
 describe('patientActions', function() {
 

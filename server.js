@@ -2,12 +2,8 @@ const express = require('express')
 const bodyParser = require('body-parser'); 
 const mongoose = require('mongoose'); 
 const { main } = require('./src/index'); 
-
-// TODO: REFACTOR ALL NESTED PROMISES 
-
-// DEBUG: 
-const { qText } = require('./src/outbound');
-
+const { registerPatient, beginStudy } = require('./src/patientLogistics'); 
+const { inboundMsgHandler } = require('./src/inbound'); 
 
 // Connect to MongoDB 
 const db = 'mongodb+srv://chase:chase123@patient-data-4fcpy.mongodb.net/patient-datadb?retryWrites=true&w=majority'
@@ -35,8 +31,10 @@ app.use(bodyParser.json());
 
 // Handle incoming text 
 app.post('/sms', function(req, res) {
-    const msg = req.body.Body
-    console.log(msg)
+    const phoneNum = req.body.From; 
+    const msg = req.body.Body; 
+    console.log(`${phoneNum}: ${msg}`); 
+    inboundMsgHandler(phoneNum, msg); 
     res.writeHead(200);
 });
 
@@ -44,42 +42,25 @@ app.post('/sms', function(req, res) {
 app.post('/api/registerPt', function(req, res) {
     console.log("registering pt. "); 
     console.log(req.body); 
+    registerPatient(req.body.name, 
+                    req.body.phoneNum, 
+                    req.body.reminderTimes, 
+                    req.body.followUpTime, 
+                    req.body.finalReminderTime, 
+                    req.body.emergencyContact); 
     res.send("Registered, thank you. "); 
 }); 
 
 // Handle request to begin study for a patient 
 app.post('/api/beginStudy', function(req, res) {
-    console.log("starting study. "); 
-    console.log(req.body); 
-
+    console.log(`starting study for ${req.body.phoneNum}. `); 
+    beginStudy(req.body.phoneNum)
     res.send("Starting the study, thank you. "); 
 }); 
 
 
-
-// DEBUG: testing queue 
-
-function test_q() {
-    qText("+17326667043", "test1"); 
-    qText("+17326667043", "test2"); 
-
-    qText("+15713517342‬", "test1"); 
-    qText("+15713517342‬", "test2"); 
-
-    qText("+17326667043", "test3"); 
-    qText("+17326667043", "test4"); 
-
-    qText("+15713421983", "test1"); 
-    qText("+15713421983", "test2"); 
-}
-
-// test_q()
-
-
 // On startup 
 main(); 
-
-
 
 // Listen for requests on PORT 
 app.listen(PORT, "0.0.0.0", () => {

@@ -31,7 +31,7 @@ function qText(phoneNum, msg) {
         msg: msg
     }); 
     // DEBUG: 
-    console.log(q.length())
+    console.log(`Q Length: ${q.length()}`); 
 }
 
 /*
@@ -48,6 +48,19 @@ function isQEmpty() {
     return q.isEmpty(); 
 }
 
+/*
+ * Print queue 
+ */
+function printQ() {
+    q.print(); 
+}
+
+/* 
+ * Get last element 
+ */ 
+function lastQElem() {
+    return q.lastElem();  
+}
 
 /*
  * Send text to AWS lambda function 
@@ -76,18 +89,10 @@ async function saveTextFromPatient(phoneNum, msg) {
     newText.body = msg; 
     newText.time = new Date(); 
 
-    await Patient.findOne({ 'personalData.phone': phoneNum }, (err, patient) => {
-        if(err) console.log(err); 
+    const pt = await Patient.findOne({ 'personalData.phone': phoneNum });
+    pt.medicalData.textHistory.push(newText); 
+    await pt.save(); 
 
-        if(patient) {
-            patient.medicalData.textHistory.push(newText); 
-            return patient.save()
-                .then(patient => { console.log("Saved text from patient successfully. ")})
-                .catch(err => { console.log(err); }); 
-        } else {
-            console.log("No patient found when saving text. "); 
-        }
-    }); 
 }
 
 /* 
@@ -99,19 +104,10 @@ async function saveTextFromServer(ptPhoneNum, msg) {
     newText.body = msg; 
     newText.time = new Date(); 
 
-    await Patient.findOne({ 'personalData.phone': ptPhoneNum }, (err, patient) => {
-        if(err) console.log(err); 
-
-        if(patient) {
-            patient.medicalData.textHistory.push(newText); 
-            return patient.save()
-                .then(patient => { console.log("Saved text from server successfully. ")})
-                .catch(err => { console.log(err); }); 
-        } else {
-            console.log("No patient found when saving text from server. "); 
-        }
-    }); 
-
+    const pt = await Patient.findOne({ 'personalData.phone': ptPhoneNum }) 
+    pt.medicalData.textHistory.push(newText); 
+    await pt.save(); 
+    
 }
 
 /* 
@@ -124,17 +120,4 @@ async function getAllTextsByPhone(phoneNum) {
     return pt.medicalData.textHistory; 
 }
 
-/* 
- * Store medication data to database. 
- */ 
-
-
-
-
- /* 
- * Store cravings data to database. 
- */ 
-
-
-
-module.exports = { qText, dQ, isQEmpty, sendText, getAllTextsByPhone, saveTextFromPatient, saveTextFromServer }; 
+module.exports = { qText, dQ, isQEmpty, printQ, lastQElem, sendText, getAllTextsByPhone, saveTextFromPatient, saveTextFromServer }; 
