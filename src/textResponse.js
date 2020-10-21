@@ -111,7 +111,7 @@ async function expectedResponsesWithFollowUp(phoneNum, responseType, userMsg, ms
             qText(phoneNum, followUpMsg); 
             await updateExpectingResponse(phoneNum, msgID); 
             console.log(`Begin cron job for follow up text for ${responseType}. `); 
-        }); 
+        }, { timeZone: "America/New_York" }); 
         followUpResJobs.start(`expResFolUp-${phoneNum}-${msgID}`); 
 
         // Return immediate response to current message 
@@ -164,7 +164,7 @@ async function pickMedResponse(phoneNum) {
         msg = await getTextWithRiskLevel(phoneNum, 2); 
         if(!msg) msg = await getTextWithRiskLevel(phoneNum, 1); 
         if(!msg) msg = await getTextWithRiskLevel(phoneNum, 3); 
-    } else if(score > 4 && score <= 5) {
+    } else if(score > 4 ) {
         msg = getTextWithRiskLevel(phoneNum, 3); 
         if(!msg) msg = await getTextWithRiskLevel(phoneNum, 2); 
         if(!msg) msg = await getTextWithRiskLevel(phoneNum, 1); 

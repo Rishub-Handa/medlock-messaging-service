@@ -89,7 +89,7 @@ async function schedulePtJobs(phoneNum) {
  * Begin study for a patient; schedule daily texts and onboarding logistics
  * This is done after the patient has been registered 
 */
-function beginStudy(phoneNum) {
+async function beginStudy(phoneNum) {
     
     // Send introductory messages 
     qText(phoneNum, specialTexts.introductoryMessage[0]); 
@@ -97,7 +97,7 @@ function beginStudy(phoneNum) {
     qText(phoneNum, specialTexts.introductoryMessage[2]); 
 
     // Schedule all jobs for patients 
-    schedulePtJobs(phoneNum); 
+    await schedulePtJobs(phoneNum); 
 
 }
 

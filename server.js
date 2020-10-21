@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const { main } = require('./src/index'); 
 const { registerPatient, beginStudy } = require('./src/patientLogistics'); 
 const { inboundMsgHandler } = require('./src/inbound'); 
+const { qText } = require('./src/outbound'); 
 
 // Connect to MongoDB 
 const db = 'mongodb+srv://chase:chase123@patient-data-4fcpy.mongodb.net/patient-datadb?retryWrites=true&w=majority'
@@ -39,24 +40,40 @@ app.post('/sms', function(req, res) {
 });
 
 // Handle request to register patient 
-app.post('/api/registerPt', function(req, res) {
+app.post('/api/registerPt', async function(req, res) {
     console.log("registering pt. "); 
     console.log(req.body); 
-    registerPatient(req.body.name, 
-                    req.body.phoneNum, 
-                    req.body.reminderTimes, 
-                    req.body.followUpTime, 
-                    req.body.finalReminderTime, 
-                    req.body.emergencyContact); 
+    await registerPatient(req.body.name, 
+                            req.body.phoneNum, 
+                            req.body.reminderTimes, 
+                            req.body.followUpTime, 
+                            req.body.finalReminderTime, 
+                            req.body.emergencyContact); 
     res.send("Registered, thank you. "); 
 }); 
 
 // Handle request to begin study for a patient 
-app.post('/api/beginStudy', function(req, res) {
+app.post('/api/beginStudy', async function(req, res) {
     console.log(`starting study for ${req.body.phoneNum}. `); 
-    beginStudy(req.body.phoneNum)
+    await beginStudy(req.body.phoneNum)
     res.send("Starting the study, thank you. "); 
 }); 
+
+// Send patient a specific custom text 
+app.post('/api/customText', function(req, res) {
+    console.log(`Sending custom text to: ${req.body.phoneNum}`); 
+    qText(req.body.phoneNum, req.body.msg); 
+    res.send("Sent custom text, thank you. "); 
+}); 
+
+
+// Testing async cron jobs 
+
+
+
+
+
+
 
 
 // On startup 

@@ -18,6 +18,15 @@ async function inboundMsgHandler(phoneNum, msg) {
 
     let containsMedInfo = false; 
 
+    // If message has cravings data 
+    let score = 0; 
+    if(score = textHasCravingsData(msg)) {
+        containsMedInfo = true; 
+
+        // Store cravings data 
+        await handleCravings(phoneNum, score); 
+    }
+
     // If message has medication data 
     if(textHasMedData(msg)) {
         containsMedInfo = true; 
@@ -25,17 +34,6 @@ async function inboundMsgHandler(phoneNum, msg) {
         await handleDispense(phoneNum); 
         // Send response 
         await handleMedResponse(phoneNum); 
-    }
-
-
-    let score = 0; 
-
-    // If message has cravings data 
-    if(score = textHasCravingsData(msg)) {
-        containsMedInfo = true; 
-
-        // Store cravings data 
-        await handleCravings(phoneNum, score); 
     }
 
     if(containsMedInfo) return; 
@@ -47,8 +45,8 @@ async function inboundMsgHandler(phoneNum, msg) {
         return; 
     } 
 
-    // Otherwise 
-    qText(phoneNum, "Sorry, I didn\'t get that. Send \'med\' when you take your medication and text a number from 1-5 to track your cravings. "); 
+    // Otherwise handle response manually 
+    // qText(phoneNum, "Sorry, I didn\'t get that. Send \'med\' when you take your medication and text a number from 1-5 to track your cravings. "); 
 
 }
 

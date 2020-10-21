@@ -31,13 +31,21 @@ function doesJobExist(key) {
 function scheduleReminders(phoneNum, hour, min) {
     console.log("scheduling daily reminders"); 
 
-    patientJobs.add(`${phoneNum}-medRemJob`, `0 ${min} ${hour} */1 * *`, () => {
-        const remMsgs = specialTexts.reminders; 
-        const msgIdx = Math.floor(Math.random() * remMsgs.length); 
-        const msg = remMsgs[msgIdx]; 
+    patientJobs.add(`${phoneNum}-medRemJob`, `0 ${min} ${hour} */1 * *`, async function() {
+        // Check if patient took medications today 
+        console.log("checking to send first reminder"); 
+        const tookMeds = await hasTakenMeds(phoneNum); 
+        console.log(tookMeds); 
 
-        qText(phoneNum, msg); 
-    }); 
+        if(!tookMeds) {
+            const remMsgs = specialTexts.reminders; 
+            const msgIdx = Math.floor(Math.random() * remMsgs.length); 
+            const msg = remMsgs[msgIdx]; 
+
+            qText(phoneNum, msg); 
+        }
+
+    }, { timeZone: "America/New_York" }); 
     patientJobs.start(`${phoneNum}-medRemJob`);
 
 }
@@ -47,12 +55,14 @@ function scheduleReminders(phoneNum, hour, min) {
 /*
  * Check if need to follow up with patient to ask for medication time. 
 */ 
-async function scheduleFollowUps(phoneNum, hour, min) {
+function scheduleFollowUps(phoneNum, hour, min) {
     console.log("scheduling daily follow up text"); 
 
     patientJobs.add(`${phoneNum}-folRemJob`, `0 ${min} ${hour} */1 * *`, async function() {
         // Check if patient took medications today 
-        const tookMeds = await hasTakenMeds(); 
+        console.log("checking to send second reminder"); 
+        const tookMeds = await hasTakenMeds(phoneNum); 
+        console.log(tookMeds); 
 
         if(!tookMeds) {
             // Send follow up message 
@@ -62,7 +72,7 @@ async function scheduleFollowUps(phoneNum, hour, min) {
 
             qText(phoneNum, msg); 
         }
-    }); 
+    }, { timeZone: "America/New_York" }); 
     patientJobs.start(`${phoneNum}-folRemJob`);
 
 }
@@ -70,16 +80,19 @@ async function scheduleFollowUps(phoneNum, hour, min) {
 /*
  * Check if need to follow up a second time with patient to ask for medication time; determine if patient is in crisis mode. 
 */ 
-async function scheduleFinalFollowUps(phoneNum, hour, min) {
+function scheduleFinalFollowUps(phoneNum, hour, min) {
     console.log("scheduling final follow up text"); 
 
 
     patientJobs.add(`${phoneNum}-finalRemJob`, `0 ${min} ${hour} */1 * *`, async function() {
-        const tookMeds = await hasTakenMeds(); 
+        console.log("checking to send third reminder"); 
+        const tookMeds = await hasTakenMeds(phoneNum); 
+        console.log(tookMeds); 
 
         // If patient didn't take medications today 
         if(!tookMeds) {
-            const daysInCrisis = await inCrisis(); 
+            const daysInCrisis = await inCrisis(phoneNum); 
+            console.log(`crisis day: ${daysInCrisis}`); 
             // Send crisis message 
             let crisisMsg = ""; 
             if(daysInCrisis % 3 == 1) crisisMsg = specialTexts.crisis1[0]; 
@@ -97,7 +110,7 @@ async function scheduleFinalFollowUps(phoneNum, hour, min) {
                 qText(phoneNum, optOutMsg); 
             }
         }
-    }); 
+    }, { timeZone: "America/New_York" }); 
     patientJobs.start(`${phoneNum}-finalRemJob`);
 
 
@@ -111,9 +124,9 @@ async function scheduleFinalFollowUps(phoneNum, hour, min) {
 */
 function resetDaily(phoneNum) {
 
-    patientJobs.add(`${phoneNum}-dailyReset`, '0 0 3 */1 * *', () => {
-        resetTookMedsToday(phoneNum); 
-    }); 
+    patientJobs.add(`${phoneNum}-dailyReset`, '0 0 3 */1 * *', async function() {
+        await resetTookMedsToday(phoneNum); 
+    }, { timeZone: "America/New_York" }); 
     patientJobs.start(`${phoneNum}-dailyReset`);
 
 }
